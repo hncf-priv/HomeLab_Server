@@ -1,0 +1,42 @@
+name: excellent_harianto
+services:
+  vaultwarden:
+    cpu_shares: 90
+    command: []
+    container_name: vaultwarden
+    deploy:
+      resources:
+        limits:
+          memory: 7367M
+    environment:
+      - SIGNUPS_ALLOWED=true
+    hostname: vaultwarden
+    image: vaultwarden/server:latest
+    labels:
+      icon: https://icon.casaos.io/main/all/vaultwarden.png
+    ports:
+      - target: 80
+        published: "8080"
+        protocol: tcp
+    restart: always
+    volumes:
+      - type: bind
+        source: /tmp/casaos-compose-app-4189166218/vw-data
+        target: /data
+    devices: []
+    cap_add: []
+    network_mode: bridge
+    privileged: false
+x-casaos:
+  author: self
+  category: self
+  hostname: ""
+  icon: https://icon.casaos.io/main/all/vaultwarden.png
+  index: /
+  is_uncontrolled: false
+  port_map: "8080"
+  scheme: http
+  store_app_id: excellent_harianto
+  title:
+    custom: ""
+    en_us: vaultwarden

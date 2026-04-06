@@ -1,0 +1,95 @@
+name: big-bear-filebrowser
+services:
+  big-bear-filebrowser:
+    cpu_shares: 90
+    command: []
+    container_name: big-bear-filebrowser
+    deploy:
+      resources:
+        limits:
+          memory: 7367M
+    environment:
+      - PGID=0
+      - PUID=0
+    hostname: big-bear-filebrowser
+    image: filebrowser/filebrowser:v2.62.1-s6
+    labels:
+      icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/file-browser.png
+    ports:
+      - mode: ingress
+        target: 80
+        published: "8050"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /DATA/AppData
+        target: /srv/app-data
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /DATA/Documents
+        target: /srv/documents
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /DATA/Downloads
+        target: /srv/downloads
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /DATA/Gallery
+        target: /srv/gallery
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /DATA/Media
+        target: /srv/media
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /DATA/AppData/big-bear-filebrowser/data/db
+        target: /database
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /DATA/AppData/big-bear-filebrowser/data/config
+        target: /config
+        bind:
+          create_host_path: true
+    devices: []
+    cap_add: []
+    networks:
+      - default
+    privileged: false
+networks:
+  default:
+    name: big-bear-filebrowser_default
+x-casaos:
+  architectures:
+    - amd64
+    - arm64
+  author: BigBearTechWorld
+  category: BigBearCasaOS
+  description:
+    en_us: Reliable and Performant File Management Desktop Sync and File Sharing Tool.
+  developer: filebrowser
+  hostname: ""
+  icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/file-browser.png
+  index: /
+  is_uncontrolled: true
+  main: big-bear-filebrowser
+  port_map: "8050"
+  scheme: http
+  store_app_id: big-bear-filebrowser
+  tagline:
+    en_us: Access your homeserver files from your browser
+  thumbnail: ""
+  tips:
+    before_install:
+      en_us: >
+        Read this before installing:
+        https://community.bigbeartechworld.com/t/added-filebrowser-to-bigbearcasaos/1934#p-3590-documentation-4
+  title:
+    custom: ""
+    en_us: Filebrowser

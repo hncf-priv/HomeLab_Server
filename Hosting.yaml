@@ -1,0 +1,118 @@
+name: wordpress
+services:
+  phpmyadmin:
+    cpu_shares: 90
+    command: []
+    container_name: pma-wp
+    deploy:
+      resources:
+        limits:
+          memory: 7367M
+    environment:
+      - MYSQL_PASSWORD=$[password]
+      - MYSQL_ROOT_PASSWORD=$[password]
+      - MYSQL_USER=$[user]
+      - PMA_HOST=wordpress-db:3306
+    hostname: pma-wp
+    image: phpmyadmin:latest
+    labels:
+      icon: https://icon.casaos.io/main/all/wordpress.png
+    ports:
+      - target: 80
+        published: "8081"
+        protocol: tcp
+    privileged: true
+    restart: unless-stopped
+    volumes: []
+    devices: []
+    cap_add: []
+    networks:
+      - wordpress-db
+  wordpress:
+    cpu_shares: 90
+    command: []
+    container_name: wordpress
+    depends_on:
+      wordpress-db:
+        condition: service_started
+        required: true
+    deploy:
+      resources:
+        limits:
+          memory: 7367M
+    environment:
+      - WORDPRESS_DB_HOST=wordpress-db:3306
+      - WORDPRESS_DB_NAME=wordpress
+      - WORDPRESS_DB_PASSWORD=$[password]
+      - WORDPRESS_DB_USER=$[user]
+    hostname: wordpress
+    image: wordpress:latest
+    labels:
+      icon: https://icon.casaos.io/main/all/wordpress.png
+    ports:
+      - target: 80
+        published: "8101"
+        protocol: tcp
+    privileged: true
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /DATA/AppData/wordpress/wp-data
+        target: /var/www/html
+    devices: []
+    cap_add: []
+    networks:
+      - wordpress-db
+  wordpress-db:
+    cpu_shares: 90
+    command: []
+    container_name: wordpress-db
+    deploy:
+      resources:
+        limits:
+          memory: 7367M
+    environment:
+      - MYSQL_DATABASE=wordpress
+      - MYSQL_PASSWORD=$[password]
+      - MYSQL_ROOT_PASSWORD=$[password]
+      - MYSQL_USER=$[user]
+    hostname: wordpress-db
+    image: mariadb:10.11
+    labels:
+      icon: https://icon.casaos.io/main/all/wordpress.png
+    ports:
+      - target: 3306
+        published: "3306"
+        protocol: tcp
+    privileged: true
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /DATA/AppData/wordpress/data-db
+        target: /var/lib/mysql
+    devices: []
+    cap_add: []
+    networks:
+      - wordpress-db
+networks:
+  wordpress-db:
+    name: wordpress-db
+x-casaos:
+  architectures:
+    - amd64
+    - arm64
+  author: Labarta
+  category: Utilities
+  description:
+    en_us: WordPress for CasaOS.
+  hostname: ""
+  icon: https://icon.casaos.io/main/all/wordpress.png
+  index: /
+  is_uncontrolled: false
+  port_map: "8101"
+  scheme: http
+  store_app_id: wordpress
+  tagline:
+    en_us: Provides additional features to CasaOS.
+  title:
+    custom: Hosting

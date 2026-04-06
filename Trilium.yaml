@@ -1,0 +1,59 @@
+name: big-bear-trilium
+services:
+  app:
+    cpu_shares: 90
+    container_name: big-bear-trilium
+    deploy:
+      resources:
+        limits:
+          memory: 7367M
+    environment:
+      - TRILIUM_DATA_DIR=/home/node/trilium-data
+    hostname: big-bear-trilium
+    image: triliumnext/trilium:v0.102.1
+    labels:
+      icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/trilium-notes.png
+    ports:
+      - mode: ingress
+        target: 8080
+        published: "8090"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /DATA/AppData/big-bear-trilium/data
+        target: /home/node/trilium-data
+        bind:
+          create_host_path: true
+    devices: []
+    cap_add: []
+    command: []
+    networks:
+      - default
+    privileged: false
+networks:
+  default:
+    name: big-bear-trilium_default
+x-casaos:
+  architectures:
+    - amd64
+    - arm64
+  author: BigBearTechWorld
+  category: BigBearCasaOS
+  description:
+    en_us: Build your personal knowledge base with Trilium Notes
+  developer: TriliumNext
+  hostname: ""
+  icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/trilium-notes.png
+  index: /
+  is_uncontrolled: false
+  main: app
+  port_map: "8090"
+  scheme: http
+  store_app_id: big-bear-trilium
+  tagline:
+    en_us: Build your personal knowledge base with Trilium Notes
+  thumbnail: ""
+  title:
+    custom: ""
+    en_us: Trilium

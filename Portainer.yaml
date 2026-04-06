@@ -1,0 +1,75 @@
+name: portainer
+services:
+  portainer:
+    cpu_shares: 90
+    command: []
+    container_name: portainer
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: "33554432"
+    hostname: portainer
+    image: portainer/portainer-ce:2.25.1
+    labels:
+      icon: https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Portainer/icon.png
+    ports:
+      - target: 8000
+        published: "8000"
+        protocol: tcp
+      - target: 9000
+        published: "9000"
+        protocol: tcp
+      - target: 9443
+        published: "9443"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /DATA/AppData/portainer
+        target: /data
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+    devices: []
+    cap_add: []
+    environment: []
+    network_mode: bridge
+    privileged: false
+x-casaos:
+  architectures:
+    - amd64
+    - arm
+    - arm64
+  author: Cp0204
+  category: Utilities
+  description:
+    en_us: Portainer is a lightweight management UI which allows you to easily
+      manage your Docker environments. It is designed to be easy to use and
+      offers full control over your Docker hosts and containers.
+    fr_fr: Portainer est une interface de gestion légère qui vous permet de gérer
+      facilement vos environnements Docker. Elle est conçue pour être facile à
+      utiliser et offre un contrôle total sur vos hôtes et conteneurs Docker.
+    zh_cn: Portainer 是一个轻量级的管理界面，可让您轻松管理Docker环境。它被设计为易于使用，并提供对 Docker 主机和容器的完全控制。
+  developer: Portainer
+  hostname: ""
+  icon: https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Portainer/icon.png
+  index: /
+  is_uncontrolled: true
+  main: portainer
+  port_map: "9000"
+  scheme: http
+  screenshot_link:
+    - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Portainer/screenshot-1.png
+    - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Portainer/screenshot-2.png
+  store_app_id: portainer
+  tagline:
+    en_us: Lightweight Docker management UI
+    fr_fr: Interface de gestion Docker légère
+    zh_cn: 轻量级 Docker 管理界面
+  thumbnail: https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Portainer/thumbnail.png
+  tips: null
+  title:
+    custom: ""
+    en_us: Portainer

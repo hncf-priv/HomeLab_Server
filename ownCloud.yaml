@@ -1,0 +1,171 @@
+name: big-bear-owncloud
+services:
+  big-bear-owncloud:
+    cpu_shares: 90
+    command: []
+    container_name: big-bear-owncloud
+    depends_on:
+      big-bear-owncloud-db:
+        condition: service_started
+        required: true
+      big-bear-owncloud-redis:
+        condition: service_started
+        required: true
+    deploy:
+      resources:
+        limits:
+          memory: 7367M
+    environment:
+      - OWNCLOUD_ADMIN_PASSWORD=$[password]
+      - OWNCLOUD_ADMIN_USERNAME=$[user]
+      - OWNCLOUD_DB_HOST=big-bear-owncloud-db
+      - OWNCLOUD_DB_NAME=big_bear_owncloud
+      - OWNCLOUD_DB_PASSWORD=f01914eb-2be3-4164-a57c-08e6518f313a
+      - OWNCLOUD_DB_TYPE=mysql
+      - OWNCLOUD_DB_USERNAME=bigbear
+      - OWNCLOUD_DOMAIN=http://ip-lokal:8070
+      - OWNCLOUD_MYSQL_UTF8MB4=true
+      - OWNCLOUD_REDIS_ENABLED=true
+      - OWNCLOUD_REDIS_HOST=big-bear-owncloud-redis
+      - OWNCLOUD_TRUSTED_DOMAINS=domain-iplokal
+    hostname: big-bear-owncloud
+    healthcheck:
+      test:
+        - CMD
+        - /usr/bin/healthcheck
+      timeout: 10s
+      interval: 30s
+      retries: 5
+    image: owncloud/server:10.16.1
+    labels:
+      icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/owncloud.png
+    ports:
+      - mode: ingress
+        target: 8080
+        published: "8070"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /DATA/AppData/big-bear-owncloud/data
+        target: /mnt/data
+        bind:
+          create_host_path: true
+    devices: []
+    cap_add: []
+    networks:
+      - big_bear_owncloud_network
+    privileged: false
+  big-bear-owncloud-db:
+    cpu_shares: 90
+    command:
+      - --max-allowed-packet=128M
+      - --innodb-log-file-size=64M
+    container_name: big-bear-owncloud-db
+    deploy:
+      resources:
+        limits:
+          memory: 7367M
+    environment:
+      - MARIADB_AUTO_UPGRADE=1
+      - MYSQL_DATABASE=big_bear_owncloud
+      - MYSQL_PASSWORD=f01914eb-2be3-4164-a57c-08e6518f313a
+      - MYSQL_ROOT_PASSWORD=f01914eb-2be3-4164-a57c-08e6518f313a
+      - MYSQL_USER=bigbear
+    hostname: big-bear-owncloud-db
+    healthcheck:
+      test:
+        - CMD
+        - mysqladmin
+        - ping
+        - -u
+        - bigbear
+        - --password=f01914eb-2be3-4164-a57c-08e6518f313a
+      timeout: 5s
+      interval: 10s
+      retries: 5
+    image: mariadb:10.6
+    labels:
+      icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/owncloud.png
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /DATA/AppData/big-bear-owncloud/mysql
+        target: /var/lib/mysql
+        bind:
+          create_host_path: true
+    ports: []
+    devices: []
+    cap_add: []
+    networks:
+      - big_bear_owncloud_network
+    privileged: false
+  big-bear-owncloud-redis:
+    cpu_shares: 90
+    command:
+      - --databases
+      - "1"
+    container_name: big-bear-owncloud-redis
+    deploy:
+      resources:
+        limits:
+          memory: 7367M
+    hostname: big-bear-owncloud-redis
+    healthcheck:
+      test:
+        - CMD
+        - redis-cli
+        - ping
+      timeout: 5s
+      interval: 10s
+      retries: 5
+    image: redis:6.2.20@sha256:d06ff6ec778c7f2a5c0dfaf58141d598efaa50a89d0e966faedfdf122cef451b
+    labels:
+      icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/owncloud.png
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /DATA/AppData/big-bear-owncloud/redis
+        target: /data
+        bind:
+          create_host_path: true
+    ports: []
+    devices: []
+    cap_add: []
+    environment: []
+    networks:
+      - big_bear_owncloud_network
+    privileged: false
+networks:
+  big_bear_owncloud_network:
+    name: big_bear_owncloud_network
+    driver: bridge
+x-casaos:
+  architectures:
+    - amd64
+    - arm64
+  author: BigBearTechWorld
+  category: BigBearCasaOS
+  description:
+    en_us: ownCloud offers file sharing and collaboration trusted by 200+ million
+      users worldwide regardless of device or location.
+  developer: owncloud
+  hostname: ""
+  icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/owncloud.png
+  index: /
+  is_uncontrolled: false
+  main: big-bear-owncloud
+  port_map: "8070"
+  scheme: http
+  store_app_id: big-bear-owncloud
+  tagline:
+    en_us: ownCloud
+  thumbnail: ""
+  tips:
+    before_install:
+      en_us: >
+        Read this before installing:
+        https://community.bigbeartechworld.com/t/added-owncloud-to-bigbearcasaos/1874#p-3512-documentation-4
+  title:
+    custom: ""
+    en_us: ownCloud

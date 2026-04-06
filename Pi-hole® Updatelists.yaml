@@ -1,0 +1,100 @@
+name: big-bear-pihole-updatelists
+services:
+  big-bear-pihole-updatelists:
+    cap_add:
+      - NET_ADMIN
+    cpu_shares: 90
+    container_name: big-bear-pihole-updatelists
+    deploy:
+      resources:
+        limits:
+          memory: 7367M
+    environment:
+      - BLOCKLISTS_URL=https://v.firebog.net/hosts/lists.php?type
+      - FTLCONF_webserver_api_password=$[password]
+      - REGEX_BLACKLIST_URL=https://raw.githubusercontent.com/mmotti/pihole-regex/master/regex.list
+      - TZ=UTC
+    hostname: big-bear-pihole-updatelists
+    image: jacklul/pihole:2026.02.0
+    labels:
+      icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/pi-hole.png
+    ports:
+      - mode: ingress
+        target: 53
+        published: "54"
+        protocol: tcp
+      - mode: ingress
+        target: 53
+        published: "55"
+        protocol: udp
+      - mode: ingress
+        target: 67
+        published: "67"
+        protocol: udp
+      - mode: ingress
+        target: 80
+        published: "8080"
+        protocol: tcp
+      - mode: ingress
+        target: 443
+        published: "10443"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /DATA/AppData/big-bear-pihole-updatelists/etc
+        target: /etc/pihole
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /DATA/AppData/big-bear-pihole-updatelists/etc/pihole-updatelists
+        target: /etc/pihole-updatelists
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /DATA/AppData/big-bear-pihole-updatelists/dnsmasq.d
+        target: /etc/dnsmasq.d
+        bind:
+          create_host_path: true
+    devices: []
+    command: []
+    networks:
+      - pihole-network
+    privileged: false
+networks:
+  pihole-network:
+    name: big-bear-pihole-updatelists_pihole-network
+    driver: bridge
+x-casaos:
+  architectures:
+    - amd64
+    - arm64
+  author: BigBearTechWorld
+  category: BigBearCasaOS
+  description:
+    en_us: The Pi-hole® is a DNS sinkhole that protects your devices from unwanted
+      content without installing any client-side software. This is a fork of the
+      Pi-hole® application that adds the ability to update the lists of blocked
+      domains and regexes.
+  developer: jacklul
+  hostname: ""
+  icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/pi-hole.png
+  index: /
+  is_uncontrolled: false
+  main: big-bear-pihole-updatelists
+  port_map: "8080"
+  scheme: http
+  store_app_id: big-bear-pihole-updatelists
+  tagline:
+    en_us: A black hole for Internet advertisements. This is a fork of the Pi-hole®
+      application that adds the ability to update the lists of blocked domains
+      and regexes.
+  thumbnail: ""
+  tips:
+    before_install:
+      en_us: >
+        Read this before installing:
+        https://community.bigbeartechworld.com/t/added-pi-hole-updatelists-to-bigbearcasaos/3472?u=dragonfire1119
+  title:
+    custom: ""
+    en_us: Pi-hole® Updatelists
