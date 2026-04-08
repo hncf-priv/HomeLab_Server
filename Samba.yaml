@@ -1,0 +1,74 @@
+﻿name: samba
+services:
+  samba:
+    cpu_shares: 90
+    command: []
+    container_name: samba
+    deploy:
+      resources:
+        limits:
+          memory: 7367M
+        reservations:
+          memory: "67108864"
+    environment:
+      - NAME=HOMELAB SERVER
+      - PASS=$[PASSWORD]
+      - RW=true
+      - USER=$[USER]
+    hostname: samba
+    image: dockurr/samba:latest
+    labels:
+      icon: https://cdn.jsdelivr.net/gh/Cp0204/CasaOS-AppStore-Play@main/Apps/samba/icon.png
+    ports:
+      - mode: ingress
+        target: 445
+        published: "445"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /media/devmon/sdc1-scsi-1JMicron_Tech_K/BACKUP
+        target: /storage
+        bind:
+          create_host_path: true
+    devices: []
+    cap_add: []
+    network_mode: bridge
+    privileged: false
+x-casaos:
+  architectures:
+    - arm
+    - arm64
+    - amd64
+  author: Cp0204
+  category: File Sync
+  description:
+    en_us: Samba SMB server in a Docker container. An implementation of the Windows
+      SMB networking protocol, allowing file sharing between Windows, Linux and
+      macOS systems. [DOC](https://hub.docker.com/r/dockurr/samba)
+    zh_cn: Docker 容器中的 Samba SMB 服务器。可以加密码🙃，实现了Windows
+      SMB网络协议，允许在Windows、Linux和macOS系统之间共享文件。[文档](https://hub.docker.com/r/dockurr/samba)
+  developer: dockurr
+  hostname: ""
+  icon: https://cdn.jsdelivr.net/gh/Cp0204/CasaOS-AppStore-Play@main/Apps/samba/icon.png
+  index: /
+  is_uncontrolled: false
+  main: samba
+  port_map: "445"
+  scheme: http
+  store_app_id: samba
+  tagline:
+    en_us: Share files across all your devices with SMB protocol
+    zh_cn: 使用SMB协议在所有设备间共享文件
+  tips:
+    before_install:
+      en_us: You need to disable the SMB service that comes with the system first to
+        free up port 445, refer to the command `systemctl stop smb && systemctl
+        disable smb`. Default username is `admin` and password is `password`.
+        Please change these credentials after installation for security.
+      zh_cn: 需要先把系统自带的SMB服务禁用，以释放445端口，参考命令`systemctl stop smb && systemctl disable
+        smb`，默认用户名为`admin`，密码为`password`。出于安全考虑，安装后请更改这些凭据。
+  title:
+    custom: ""
+    en_us: Samba
+    zh_cn: SMB共享

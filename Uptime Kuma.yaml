@@ -1,0 +1,58 @@
+name: big-bear-uptime-kuma
+services:
+  app:
+    cpu_shares: 90
+    container_name: uptime-kuma
+    deploy:
+      resources:
+        limits:
+          memory: 7367M
+    hostname: uptime-kuma
+    image: louislam/uptime-kuma:2
+    labels:
+      icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/uptime-kuma.png
+    ports:
+      - mode: ingress
+        target: 3001
+        published: "3001"
+        protocol: tcp
+    restart: always
+    volumes:
+      - type: bind
+        source: /DATA/AppData/big-bear-uptime-kuma/data
+        target: /app/data
+        bind:
+          create_host_path: true
+    devices: []
+    cap_add: []
+    command: []
+    environment: []
+    networks:
+      - default
+    privileged: false
+networks:
+  default:
+    name: big-bear-uptime-kuma_default
+x-casaos:
+  architectures:
+    - amd64
+    - arm64
+  author: BigBearTechWorld
+  category: BigBearCasaOS
+  description:
+    en_us: A fancy self-hosted monitoring tool
+  developer: louislam
+  hostname: ""
+  icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/uptime-kuma.png
+  index: /
+  is_uncontrolled: false
+  main: app
+  port_map: "3001"
+  scheme: http
+  store_app_id: big-bear-uptime-kuma
+  tagline:
+    en_us: A fancy self-hosted monitoring tool
+  thumbnail: ""
+  title:
+    custom: ""
+    en_us: Uptime Kuma
